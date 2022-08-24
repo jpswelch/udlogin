@@ -1,24 +1,62 @@
-import logo from './logo.svg';
 import './App.css';
 
+import UAuth from '@uauth/js';
+
 function App() {
+  let message = '';
+
+  const uauth = new UAuth({
+    clientID: '5fedb89d-8de5-4d66-9e7f-7a7bff8101ab',
+    redirectUri: 'http://localhost:3000',
+    scope: 'openid wallet',
+  });
+
+  const login = async () => {
+    try {
+      const authorization = await uauth.loginWithPopup();
+      console.log(authorization);
+      message = 'logged in';
+      message = authorization.idToken.sub;
+      document.getElementById('msg').innerHTML =
+        '<p><h1 class="text-lg p-4">Welcome</h1> <br/><h2 class="text-xl">' +
+        message +
+        '</h2></p>';
+      document.getElementById('btn-login').style.display = 'none';
+      document.getElementById('btn-logout').style.display = '';
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logout = async () => {
+    await uauth.logout();
+    console.log('Logged out with Unstoppable');
+    document.getElementById('msg').innerHTML = '';
+    document.getElementById('btn-login').style.display = '';
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="flex m-10">
+        <div className="m-auto">
+          <button
+            id="btn-login"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+            onClick={login}
+          >
+            login
+          </button>
+          <button
+            id="btn-logout"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+            onClick={logout}
+          >
+            logout
+          </button>
+          <div id="msg" class="m-auto"></div>
+        </div>
+      </div>
+    </>
   );
 }
 
