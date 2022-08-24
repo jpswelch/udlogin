@@ -6,8 +6,8 @@ function App() {
   let message = '';
 
   const uauth = new UAuth({
-    clientID: '5fedb89d-8de5-4d66-9e7f-7a7bff8101ab',
-    redirectUri: 'http://localhost:3000',
+    clientID: process.env.REACT_APP_CLIENT_ID,
+    redirectUri: process.env.REACT_APP_REDIRECT_URI,
     scope: 'openid wallet',
   });
 
